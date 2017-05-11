@@ -1,0 +1,32 @@
+unConnected = zeros(10);
+Connected = ones(10);
+A = [Connected, unConnected, unConnected;
+    unConnected, Connected, unConnected;
+    unConnected, unConnected, Connected] - eye(30);
+ A(10,11) = 1;
+ A(11,10) = 1;
+% A(20,21) = 1;
+% A(21,20) = 1;
+% A(20,22) = 1;
+% A(22,20) = 1;
+degs = sum(A, 2);
+D = sparse(1:size(A, 1), 1:size(A, 2), degs);
+D = full(D);
+I = eye(30);
+Lp = I - (D^(-0.5))*A*(D^(-0.5));
+[W, D] = eigs(Lp, 2, 'sm');
+C = kmeans(W, 2)-1;
+
+A2 = A;
+A2(20,21) = 1;
+A2(21,20) = 1;
+A2(20,22) = 1;
+A2(22,20) = 1;
+
+degs2 = sum(A2, 2);
+D2 = sparse(1:size(A2, 1), 1:size(A2, 2), degs2);
+D2 = full(D2);
+I2 = eye(30);
+Lp2 = I2 - (D2^(-0.5))*A2*(D2^(-0.5));
+[W2, D2] = eigs(Lp2, 2, 'sm');
+C2 = kmeans(W2, 2)-1;
